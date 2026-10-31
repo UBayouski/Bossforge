@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Chat Builds the Boss</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/stream.css">
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="/">B<span>✳</span>B <small>CHAT BUILDS THE BOSS</small></a>
+      <div class="connection">
+        <button id="stream-view" aria-pressed="false">Stream view</button>
+        <button id="sound" aria-pressed="false" title="Toggle game sound effects">Sound off</button>
+        <i id="dot"></i>
+        <span id="status">Local playground</span>
+        <button id="connect" class="quiet">Connect Twitch ↗</button>
+      </div>
+    </header>
+    <main>
+      <section class="intro">
+        <div>
+          <p class="eyebrow">THE AUDIENCE IS THE FINAL BOSS</p>
+          <h1>You build it.<br><em>I fight it.</em></h1>
+        </div>
+        <p class="lede">Give your streamer a monster of a problem.<br>Build together. Make questionable choices.</p>
+      </section>
+      <section class="layout">
+        <div class="stage">
+          <div class="stage-top">
+            <span id="phase">LOBBY / READY TO BUILD</span>
+            <span id="timer">ROUND 01</span>
+          </div>
+          <div class="arena">
+            <canvas
+              id="game"
+              width="1100"
+              height="660"
+              tabindex="0"
+              aria-label="Boss arena. WASD or arrow keys move, mouse aims, left-click or Space shoots, Shift dashes."
+            ></canvas>
+          </div>
+          <div class="stage-bottom">
+            <span><b>WASD</b> move <b>MOUSE</b> aim <b>CLICK / SPACE</b> shoot <b>SHIFT</b> dash</span>
+            <button id="fullscreen" class="quiet">⛶ Fullscreen</button>
+          </div>
+          <div id="announcement" role="status"></div>
+        </div>
+        <aside>
+          <div class="workshop">
+            <div class="panel-heading">
+              <span class="eyebrow">MONSTER WORKSHOP</span>
+              <span class="tag">CHAT POWERED</span>
+            </div>
+            <h2>Choose your evil.</h2>
+            <p class="muted">One part per viewer, per round.<br>Every power has a weakness.</p>
+            <div class="parts">
+              <button class="part armor" data-part="armor">
+                <span class="icon">⬡</span>
+                <span>
+                  <strong>!armor</strong>
+                  <small>More health · slower movement</small>
+                </span>
+                <b id="count-armor">0</b>
+              </button>
+              <button class="part legs" data-part="legs">
+                <span class="icon">ϟ</span>
+                <span>
+                  <strong>!legs</strong>
+                  <small>More speed · less health</small>
+                </span>
+                <b id="count-legs">0</b>
+              </button>
+              <button class="part chaos" data-part="chaos">
+                <span class="icon">✳</span>
+                <span>
+                  <strong>!chaos</strong>
+                  <small>More attacks · longer recovery</small>
+                </span>
+                <b id="count-chaos">0</b>
+              </button>
+            </div>
+            <div class="simulation">
+              <label><input id="simulation" type="checkbox" checked> Simulated chat <span>LOCAL</span></label>
+              <small>Part buttons add a simulated viewer.</small>
+            </div>
+            <button id="start" class="primary">Start building <span>↗</span></button>
+            <div class="actions">
+              <button id="skip">Fight now</button>
+              <button id="pause">Pause</button>
+              <button id="reset">Reset</button>
+            </div>
+            <div class="feed-heading">
+              <span>LIVE CONTRIBUTIONS</span>
+              <span id="viewers">0 builders</span>
+            </div>
+            <ol id="feed" tabindex="0" aria-label="Live contributions">
+              <li class="empty">Your future enemies will appear here.</li>
+            </ol>
+          </div>
+        </aside>
+      </section>
+      <footer>
+        <span>BUILT BY CHAT. REGRETTED BY STREAMERS.</span>
+        <span>PROTOTYPE 01 / CODEX × TWITCH</span>
+      </footer>
+    </main>
+    <dialog id="setup">
+      <h2>Connect your channel</h2>
+      <p>Register a Twitch application, enable 2FA, and add this exact OAuth redirect URL:</p>
+      <code id="redirect"></code>
+      <p>Set <code>TWITCH_CLIENT_ID</code> in your local <code>.env</code> file and restart the server. Then connect again.</p>
+      <button id="close-setup" class="primary">Got it</button>
+    </dialog>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

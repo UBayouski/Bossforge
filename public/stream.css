@@ -1,0 +1,525 @@
+/* Scale the presentation with the capture width, including native 4K displays. */
+body.stream-view {
+  --stream-font: clamp(14px, min(1.05vw, 1.85dvh), 36px);
+  font-size: var(--stream-font);
+  height: 100dvh;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.stream-view header {
+  height: auto;
+  min-height: clamp(60px, 4.5vw, 150px);
+  padding: 12px 2%;
+  gap: 16px;
+}
+
+.stream-view .brand {
+  font-size: clamp(32px, 2.7vw, 92px);
+}
+
+.stream-view .brand small {
+  font-size: clamp(10px, .72vw, 26px);
+  max-width: 12em;
+}
+
+.stream-view .connection, .stream-view .connection button {
+  font-size: clamp(12px, .9vw, 30px);
+}
+
+.stream-view .connection {
+  gap: .8em;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.stream-view main {
+  max-width: none;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 1dvh 2%;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  align-self: stretch;
+}
+
+.stream-view .intro, .stream-view footer {
+  display: none;
+}
+
+.stream-view .layout {
+  grid-template-columns: minmax(0, 1fr) clamp(330px, 25vw, 860px);
+  grid-template-rows: minmax(0, 1fr);
+  gap: 1.2vw;
+  align-items: stretch;
+  height: 100%;
+  min-height: 0;
+}
+
+.stream-view .stage {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  height: 100%;
+  min-height: 0;
+  align-self: stretch;
+}
+
+.stream-view .arena {
+  position: relative;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  background: #101510;
+}
+
+.stream-view .arena canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  object-fit: contain;
+}
+
+.stream-view aside {
+  padding: clamp(14px, 1.15dvh, 32px);
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.stream-view .stage-top {
+  font-size: clamp(12px, .92vw, 32px);
+  padding: .9em 1.2em;
+}
+
+.stream-view .stage-bottom {
+  font-size: clamp(11px, .82vw, 28px);
+  padding: .7em;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.stream-view .stage-bottom .quiet {
+  font-size: inherit;
+}
+
+.stream-view .stage-bottom b {
+  margin-left: .6em;
+}
+
+.stream-view .panel-heading .eyebrow, .stream-view .tag {
+  font-size: clamp(10px, .65vw, 22px);
+  letter-spacing: 1px;
+}
+
+.stream-view h2 {
+  font-size: 2.1em;
+  margin: .35em 0 .2em;
+}
+
+.stream-view .muted {
+  font-size: 1em;
+  color: #c1cbb7;
+  line-height: 1.5;
+}
+
+.stream-view .parts {
+  gap: .65em;
+  margin: 1em 0;
+}
+
+.stream-view .part {
+  padding: .85em .65em;
+  gap: .65em;
+}
+
+.stream-view .part .icon {
+  width: 1.15em;
+  font-size: 2em;
+}
+
+.stream-view .part strong {
+  font-size: 1.35em;
+}
+
+.stream-view .part small {
+  font-size: .8em;
+  color: #c1cbb7;
+  line-height: 1.4;
+}
+
+.stream-view .part > b {
+  font-size: 1.8em;
+}
+
+.stream-view .simulation {
+  font-size: .9em;
+  padding-bottom: 1em;
+}
+
+.stream-view .simulation small {
+  font-size: .8em;
+}
+
+.stream-view .simulation label span {
+  font-size: .7em;
+}
+
+.stream-view .primary {
+  font-size: 1em;
+  padding: .85em 1em;
+}
+
+.stream-view .actions {
+  margin: .6em 0 1.2em;
+}
+
+.stream-view .actions button {
+  font-size: .8em;
+  padding: .65em .4em;
+}
+
+.stream-view .feed-heading {
+  font-size: .76em;
+  color: #c4cfb9;
+  letter-spacing: .5px;
+  padding-bottom: .8em;
+  gap: 8px;
+}
+
+.stream-view #feed {
+  font-size: .95em;
+  flex: 1 0 auto;
+  height: 0;
+  min-height: 7em;
+  max-height: none;
+}
+
+.stream-view li {
+  font-size: .95em;
+  padding: .65em 0;
+  gap: 10px;
+}
+
+.stream-view li span {
+  flex-shrink: 0;
+}
+
+#feed {
+  font-size: 12px;
+  height: clamp(7em, 30dvh, 28em);
+  min-height: 7em;
+  max-height: none;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: #899d6d #20291b;
+}
+
+/* Keep controls at their natural size and give spare panel height to names.
+The feed retains three readable rows when a short viewport needs scrolling. */
+aside {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+aside > :not(#feed) {
+  flex-shrink: 0;
+}
+
+@media(min-width: 761px) {
+
+  /* Let the arena set the grid row height; workshop content scrolls inside it. */
+  .layout > aside {
+    contain: size;
+    align-self: stretch;
+    min-height: 0;
+    overflow-y: auto;
+  }
+  #feed {
+    flex: 1 0 auto;
+    height: 0;
+  }
+}
+
+#feed li {
+  font-size: inherit;
+  gap: 10px;
+  line-height: 1.4;
+  padding: .45em 0;
+}
+
+#feed .contributor-name {
+  min-width: 0;
+  flex: 1 1 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: inherit;
+}
+
+.stage:fullscreen {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  width: 100vw;
+  height: 100dvh;
+}
+
+.stage:fullscreen .arena {
+  position: relative;
+  min-height: 0;
+  min-width: 0;
+}
+
+.stage:fullscreen canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  object-fit: contain;
+  max-height: none;
+  max-width: none;
+  margin: 0;
+}
+
+.stream-view #announcement {
+  font-size: var(--stream-font);
+  bottom: 12%;
+}
+
+[aria-pressed="true"] {
+  border-color: var(--lime);
+  color: var(--lime);
+}
+
+@media(max-width: 850px) {
+  body.stream-view {
+    height: auto;
+    min-height: 100dvh;
+    overflow: auto;
+    display: block;
+  }
+  .stream-view main {
+    height: auto;
+    display: block;
+  }
+  .stream-view .layout {
+    height: auto;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+  .stream-view .stage {
+    height: auto;
+    display: block;
+  }
+  .stream-view .arena canvas {
+    position: static;
+    height: auto;
+    aspect-ratio: 1100 / 660;
+  }
+  .stream-view .stage:fullscreen {
+    height: 100dvh;
+    display: grid;
+  }
+  .stream-view .stage:fullscreen canvas {
+    position: absolute;
+    height: 100%;
+    aspect-ratio: auto;
+  }
+  .stream-view aside {
+    contain: none;
+    overflow: visible;
+  }
+  .stream-view #feed {
+    flex: none;
+    height: clamp(7em, 35dvh, 28em);
+  }
+  .stream-view header {
+    flex-wrap: wrap;
+  }
+  .stream-view .connection {
+    justify-content: flex-start;
+  }
+}
+
+/* Size controls from the panel itself, including short, wide viewports.
+Only the arena determines the height of a side-by-side grid row. */
+.layout > aside {
+  container-type: size;
+  contain: size;
+  align-self: stretch;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.layout > aside > .workshop {
+  --workshop-font: min(36px, 4.2cqw, 1.6cqh);
+  font-size: var(--workshop-font);
+  flex: 1 1 0;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+}
+
+.workshop > :not(#feed) {
+  flex-shrink: 0;
+}
+
+.workshop .panel-heading .eyebrow, .workshop .tag {
+  font-size: .65em;
+  letter-spacing: .08em;
+}
+
+.workshop .tag {
+  padding: .4em;
+}
+
+.workshop h2 {
+  font-size: 2.1em;
+  margin: .35em 0 .2em;
+}
+
+.workshop .muted {
+  font-size: 1em;
+  line-height: 1.5;
+  margin: 0 0 1em;
+}
+
+.workshop .parts {
+  gap: .65em;
+  margin: 0 0 1em;
+}
+
+.workshop .part {
+  padding: .85em .65em;
+  gap: .65em;
+}
+
+.workshop .part .icon {
+  width: 1.15em;
+  font-size: 2em;
+}
+
+.workshop .part strong {
+  font-size: 1.35em;
+}
+
+.workshop .part small {
+  font-size: .8em;
+  line-height: 1.4;
+  margin-top: .3em;
+}
+
+.workshop .part > b {
+  font-size: 1.8em;
+}
+
+.workshop .simulation {
+  font-size: .9em;
+  padding-bottom: 1em;
+}
+
+.workshop .simulation label {
+  gap: .4em;
+}
+
+.workshop .simulation input {
+  width: 1em;
+  height: 1em;
+  margin: .2em;
+}
+
+.workshop .simulation small {
+  font-size: .8em;
+  margin: .6em 0 0 .3em;
+}
+
+.workshop .simulation label span {
+  font-size: .7em;
+}
+
+.workshop .primary {
+  font-size: 1em;
+  padding: .85em 1em;
+}
+
+.workshop .actions {
+  gap: .4em;
+  margin: .6em 0 1.2em;
+}
+
+.workshop .actions button {
+  font-size: .8em;
+  padding: .65em .4em;
+}
+
+.workshop .feed-heading {
+  font-size: .76em;
+  letter-spacing: .04em;
+  padding-bottom: .8em;
+  gap: .6em;
+}
+
+.workshop #feed {
+  --contribution-rows: 7;
+  --contribution-height: calc(var(--contribution-rows) * (2.3em + 1px));
+  font-size: .95em;
+  flex: 0 0 auto;
+  height: var(--contribution-height);
+  min-height: 0;
+  max-height: var(--contribution-height);
+  overflow: auto;
+  scrollbar-width: none;
+  scrollbar-gutter: auto;
+}
+
+.workshop #feed::-webkit-scrollbar {
+  display: none;
+}
+
+.workshop #feed li {
+  font-size: inherit;
+  line-height: 1.4;
+  padding: .45em 0;
+  gap: .7em;
+}
+
+/* Stacked panels have a natural height instead of a constrained arena height. */
+@media(max-width: 760px) {
+  .layout > aside {
+    container-type: inline-size;
+    contain: inline-size;
+  }
+  .layout > aside > .workshop {
+    --workshop-font: min(18px, 4.2cqw);
+    flex: auto;
+  }
+  .workshop #feed {
+    flex: none;
+    height: var(--contribution-height);
+  }
+}
+
+@media(max-width: 850px) {
+  .stream-view .layout > aside {
+    container-type: inline-size;
+    contain: inline-size;
+  }
+  .stream-view .layout > aside > .workshop {
+    --workshop-font: min(18px, 4.2cqw);
+    flex: auto;
+  }
+  .stream-view .workshop #feed {
+    flex: none;
+    height: var(--contribution-height);
+  }
+}

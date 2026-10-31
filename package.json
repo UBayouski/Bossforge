@@ -1,0 +1,12 @@
+{
+  "name": "chat-builds-the-boss",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server.mjs",
+    "test": "node --test --test-isolation=none",
+    "check": "node --check server.mjs && node --check twitch-session.mjs && node --check public/app.js"
+  },
+  "engines": { "node": ">=24 <25" }
+}
