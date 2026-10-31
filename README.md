@@ -1,4 +1,6 @@
-# Chat Builds the Boss
+# Bossforge
+
+**Chat builds the boss. You build it. I fight it.**
 
 A Twitch audience assembles a monster, then the streamer fights it in a browser arena. Built with Codex for the Codex × TwitchCon hackathon.
 

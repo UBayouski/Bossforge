@@ -106,7 +106,7 @@ export function createApp({
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const app = createApp();
-  console.log(`Chat Builds the Boss → ${await app.listen()}`);
+  console.log(`Bossforge → ${await app.listen()}`);
   const shutdown = () => { app.close().then(() => process.exit(0)); };
   process.once('SIGTERM', shutdown); process.once('SIGINT', shutdown);
 }
