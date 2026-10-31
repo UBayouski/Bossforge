@@ -4,6 +4,12 @@ import { request as httpRequest } from 'node:http';
 import { createApp } from '../server.mjs';
 import { TwitchSession } from '../twitch-session.mjs';
 
+// Render injects deployment settings during builds. HTTP tests must always
+// target their own loopback server, never the live site's public URL.
+function testApp(options = {}) {
+  return createApp({ port: 0, host: '127.0.0.1', publicUrl: '', clientId: '', ...options });
+}
+
 function fixtures() {
   const sockets = [], calls = [];
   class Socket {
@@ -26,7 +32,7 @@ function fixtures() {
 
 test('browsers have isolated Twitch credentials, notifications, and disconnects', async t => {
   const dependencies = fixtures();
-  const app = createApp({ port: 0, clientId: 'app-id', ...dependencies });
+  const app = testApp({ clientId: 'app-id', ...dependencies });
   const origin = await app.listen();
   t.after(() => app.close());
   const post = async (path, body, cookie) => {
@@ -68,7 +74,7 @@ test('browsers have isolated Twitch credentials, notifications, and disconnects'
 });
 
 test('HTTP assets and SSE remain available without Twitch; origin and payload checks reject bad requests', async t => {
-  const app = createApp({ port: 0, clientId: '' });
+  const app = testApp();
   const origin = await app.listen();
   t.after(() => app.close());
   for (const path of ['/', '/app.js', '/style.css', '/stream.css', '/favicon.svg', '/health']) {
@@ -99,7 +105,7 @@ test('HTTP assets and SSE remain available without Twitch; origin and payload ch
 });
 
 test('production uses the configured HTTPS origin and secure cookies instead of request forwarding headers', async t => {
-  const app = createApp({ port: 0, host: '127.0.0.1', publicUrl: 'https://boss.example' });
+  const app = testApp({ publicUrl: 'https://boss.example' });
   await app.listen();
   t.after(() => app.close());
   const address = `http://127.0.0.1:${app.server.address().port}`;
@@ -128,7 +134,7 @@ test('production uses the configured HTTPS origin and secure cookies instead of 
 });
 
 test('session capacity is bounded while health and config remain usable', async t => {
-  const app = createApp({ port: 0, maxSessions: 1 });
+  const app = testApp({ maxSessions: 1 });
   const origin = await app.listen();
   t.after(() => app.close());
   const send = () => fetch(origin + '/api/disconnect', { method: 'POST', headers: { Origin: origin, 'Content-Type': 'application/json' }, body: '{}' });
@@ -147,6 +153,31 @@ test('an in-flight token validation cannot undo a newer disconnect', async () =>
   await assert.rejects(connection, /superseded/);
   assert.equal(session.token, null);
   session.close();
+});
+
+test('test servers ignore production environment variables injected during Render builds', async t => {
+  const injected = {
+    RENDER_EXTERNAL_URL: 'https://render-build.invalid',
+    PUBLIC_URL: 'https://custom-domain.invalid',
+    HOST: '0.0.0.0', PORT: '10000', TWITCH_CLIENT_ID: 'production-app',
+  };
+  const previous = Object.fromEntries(Object.keys(injected).map(key => [key, process.env[key]]));
+  let app;
+  try {
+    Object.assign(process.env, injected);
+    app = testApp();
+  } finally {
+    for (const [key, value] of Object.entries(previous)) {
+      if (value === undefined) delete process.env[key];
+      else process.env[key] = value;
+    }
+  }
+  const origin = await app.listen();
+  t.after(() => app.close());
+  assert.match(origin, /^http:\/\/localhost:\d+$/);
+  assert.equal(app.server.address().address, '127.0.0.1');
+  const response = await fetch(origin + '/api/config', { signal: AbortSignal.timeout(5000) });
+  assert.deepEqual(await response.json(), { clientId: '', redirectUri: origin });
 });
 
 test('revoked subscriptions remove credentials and stop reconnect timers', async () => {
