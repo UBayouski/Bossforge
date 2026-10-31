@@ -5,3 +5,7 @@ node_modules/
 *.log
 .layout-check/
 release/
+DEMO_VIDEO.md
+DEPLOYMENT.md
+HACKATHON_CHECKLIST.md
+CODEX_SESSIONS.md
