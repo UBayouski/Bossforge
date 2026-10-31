@@ -69,7 +69,7 @@ $('#sound').onclick = async () => {
     }
     await audio.context.resume();
     audio.enabled = !audio.enabled;
-    audio.master.gain.setTargetAtTime(audio.enabled ? .25 : 0, audio.context.currentTime, .015);
+    audio.master.gain.setTargetAtTime(audio.enabled ? .325 : 0, audio.context.currentTime, .015);
     button.textContent = audio.enabled ? 'Sound on' : 'Sound off';
     button.setAttribute('aria-pressed', String(audio.enabled));
     if (audio.enabled) playSound('start');
