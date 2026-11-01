@@ -68,6 +68,8 @@ The app requests `user:read:chat` and uses the connected broadcaster's own chann
 
 ## Use with OBS
 
+Regular desktop view uses the original layout when there is enough height. On shorter screens, it automatically compacts the intro and fits the arena and workshop into the viewport. Narrow mobile layouts retain normal page scrolling.
+
 Open the game in a browser and capture that window with OBS. **Stream view** keeps the arena and workshop together while enlarging the presentation for capture; **Fullscreen** expands the arena. Play in the browser window so keyboard and mouse controls reach the game.
 
 Keep one game tab open for a live round. Enable the synthesized sound effects if desired and include browser audio in your OBS mix.

@@ -177,3 +177,47 @@ test('browsers without audio support can still play', async () => {
   assert.equal(run('phase'), 'fight');
   assert.equal(run('audio.enabled'), false);
 });
+
+test('regular layout compacts only when its natural height exceeds the viewport and restores on taller screens', () => {
+  const run = game();
+  run(`
+    const classes = new Set();
+    document.body = { classList: {
+      contains: name => classes.has(name),
+      remove: name => classes.delete(name),
+      toggle(name, force) { if (force) classes.add(name); else classes.delete(name); }
+    } };
+    window.innerWidth = 1280; window.innerHeight = 800; window.scrollY = 0;
+    $('main').getBoundingClientRect = () => ({ bottom: classes.has('fit-viewport') ? 720 : 1000 });
+    fitViewport();
+  `);
+  assert.equal(run("classes.has('fit-viewport')"), true);
+  run('fitViewport()');
+  assert.equal(run("classes.has('fit-viewport')"), true, 'must measure the original layout rather than oscillate');
+  run('window.innerHeight = 1200; fitViewport()');
+  assert.equal(run("classes.has('fit-viewport')"), false);
+  run('window.innerHeight = 800; fitViewport()');
+  assert.equal(run("classes.has('fit-viewport')"), true);
+});
+
+test('regular viewport fitting leaves mobile, Stream view, and fullscreen behavior intact', () => {
+  const run = game();
+  run(`
+    const classes = new Set(['fit-viewport', 'stream-view']);
+    document.body = { classList: {
+      contains: name => classes.has(name), remove: name => classes.delete(name),
+      toggle(name, force) { if (force) classes.add(name); else classes.delete(name); }
+    } };
+    window.innerWidth = 1280; window.innerHeight = 800; window.scrollY = 0;
+    $('main').getBoundingClientRect = () => ({ bottom: 1000 });
+    fitViewport();
+  `);
+  assert.equal(run("classes.has('fit-viewport')"), false);
+  assert.equal(run("classes.has('stream-view')"), true);
+  run("classes.delete('stream-view'); window.innerWidth = 760; fitViewport()");
+  assert.equal(run("classes.has('fit-viewport')"), false);
+  run("window.innerWidth = 1280; document.fullscreenElement = {}; fitViewport()");
+  assert.equal(run("classes.has('fit-viewport')"), false);
+  run('document.fullscreenElement = null; fitViewport()');
+  assert.equal(run("classes.has('fit-viewport')"), true);
+});

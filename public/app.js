@@ -113,10 +113,34 @@ function fitWorkshop() {
   }
   workshop.style.setProperty('--workshop-font', `${low}px`);
 }
+function fitViewport() {
+  if (document.fullscreenElement) return;
+  const body = document.body;
+  // Measure the original layout each time; measuring the compact layout would
+  // incorrectly switch back as soon as it fits and cause repeated toggling.
+  body.classList.remove('fit-viewport');
+  if (body.classList.contains('stream-view') || window.innerWidth <= 760) return;
+  const naturalBottom = $('main').getBoundingClientRect().bottom + window.scrollY;
+  body.classList.toggle('fit-viewport', naturalBottom > window.innerHeight + 1);
+}
+let viewportFrame = 0;
+function scheduleViewportFit() {
+  if (viewportFrame) return;
+  viewportFrame = requestAnimationFrame(() => { viewportFrame = 0; fitViewport(); });
+}
+window.addEventListener('resize', scheduleViewportFit);
+document.addEventListener?.('fullscreenchange', scheduleViewportFit);
+scheduleViewportFit();
+
 if (typeof ResizeObserver !== 'undefined') {
   new ResizeObserver(fitWorkshop).observe($('.layout > aside'));
+  const layoutObserver = new ResizeObserver(scheduleViewportFit);
+  layoutObserver.observe($('header'));
+  layoutObserver.observe($('.intro'));
   document.fonts?.ready.then(fitWorkshop);
+  document.fonts?.ready.then(scheduleViewportFit);
   document.fonts?.addEventListener('loadingdone', fitWorkshop);
+  document.fonts?.addEventListener('loadingdone', scheduleViewportFit);
 }
 
 function buildStats() {
@@ -529,6 +553,7 @@ $('#stream-view').onclick = () => {
   const enabled = document.body.classList.toggle('stream-view');
   $('#stream-view').setAttribute('aria-pressed', String(enabled));
   $('#stream-view').textContent = enabled ? 'Exit stream view' : 'Stream view';
+  fitViewport();
   canvas.focus();
 };
 $('#close-setup').onclick = () => $('#setup').close();

@@ -1,12 +1,12 @@
-/* Regular desktop view keeps the intro, arena, workshop, and footer in one screen. */
+/* Compact regular view only when its natural layout exceeds the viewport height. */
 @media(min-width: 761px) {
-  body:not(.stream-view) {
+  body.fit-viewport:not(.stream-view) {
     height: 100dvh;
     display: grid;
     grid-template-rows: auto minmax(0, 1fr);
   }
 
-  body:not(.stream-view) header {
+  body.fit-viewport:not(.stream-view) header {
     height: auto;
     min-height: clamp(60px, 8dvh, 86px);
     padding-block: 10px;
@@ -14,7 +14,7 @@
     flex-wrap: wrap;
   }
 
-  body:not(.stream-view) main {
+  body.fit-viewport:not(.stream-view) main {
     width: 100%;
     height: 100%;
     min-height: 0;
@@ -24,38 +24,38 @@
     padding-top: clamp(12px, 2dvh, 26px);
   }
 
-  body:not(.stream-view) .intro {
+  body.fit-viewport:not(.stream-view) .intro {
     align-items: center;
     gap: 24px;
     margin: 0;
   }
 
-  body:not(.stream-view) .intro .eyebrow {
+  body.fit-viewport:not(.stream-view) .intro .eyebrow {
     margin: 0 0 7px;
     font-size: 9px;
   }
 
-  body:not(.stream-view) h1 {
+  body.fit-viewport:not(.stream-view) h1 {
     font-size: clamp(36px, min(4.5vw, 6.5dvh), 64px);
     line-height: 1;
     margin: 0;
   }
 
-  body:not(.stream-view) h1 br { display: none; }
-  body:not(.stream-view) h1 em { margin-left: .15em; }
+  body.fit-viewport:not(.stream-view) h1 br { display: none; }
+  body.fit-viewport:not(.stream-view) h1 em { margin-left: .15em; }
 
-  body:not(.stream-view) .lede {
+  body.fit-viewport:not(.stream-view) .lede {
     font-size: 12px;
     line-height: 1.5;
     margin: 0;
   }
 
-  body:not(.stream-view) .layout {
+  body.fit-viewport:not(.stream-view) .layout {
     min-height: 0;
     grid-template-rows: minmax(0, 1fr);
   }
 
-  body:not(.stream-view) .stage {
+  body.fit-viewport:not(.stream-view) .stage {
     display: grid;
     grid-template-rows: auto minmax(0, 1fr) auto;
     min-height: 0;
@@ -63,7 +63,7 @@
     align-self: stretch;
   }
 
-  body:not(.stream-view) .arena {
+  body.fit-viewport:not(.stream-view) .arena {
     position: relative;
     min-width: 0;
     min-height: 0;
@@ -71,7 +71,7 @@
     background: #101510;
   }
 
-  body:not(.stream-view) .arena canvas {
+  body.fit-viewport:not(.stream-view) .arena canvas {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -80,18 +80,18 @@
     object-fit: contain;
   }
 
-  body:not(.stream-view) .stage-top {
+  body.fit-viewport:not(.stream-view) .stage-top {
     padding: clamp(9px, 1.4dvh, 15px) 16px;
     gap: 12px;
   }
 
-  body:not(.stream-view) .stage-bottom {
+  body.fit-viewport:not(.stream-view) .stage-bottom {
     padding: 6px 12px;
     gap: 8px;
     flex-wrap: wrap;
   }
 
-  body:not(.stream-view) footer {
+  body.fit-viewport:not(.stream-view) footer {
     padding: 0 0 clamp(10px, 1.6dvh, 20px);
     gap: 16px;
     font-size: 8px;
@@ -99,8 +99,8 @@
 }
 
 @media(min-width: 761px) and (max-width: 1100px) {
-  body:not(.stream-view) .brand small { display: none; }
-  body:not(.stream-view) .lede { display: none; }
+  body.fit-viewport:not(.stream-view) .brand small { display: none; }
+  body.fit-viewport:not(.stream-view) .lede { display: none; }
 }
 
 /* Scale the presentation with the capture width, including native 4K displays. */
