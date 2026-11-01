@@ -494,7 +494,7 @@ function draw() {
 function frame(now) { const dt = Math.min((now - last) / 1000 || 0, .04); last = now; update(dt); draw(); requestAnimationFrame(frame); }
 function arenaBounds() {
   const bounds = canvas.getBoundingClientRect();
-  // Stream view contains the arena inside the available height; exclude its letterboxing.
+  // Viewport layouts contain the arena in the available space; exclude letterboxing.
   const width = Math.min(bounds.width, bounds.height * W / H), height = width * H / W;
   return { width, height, left: bounds.left + (bounds.width - width) / 2, top: bounds.top + (bounds.height - height) / 2 };
 }
