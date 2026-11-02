@@ -7,5 +7,6 @@ test('accepts exact build commands regardless of casing and surrounding whitespa
   assert.equal(parseCommand('!chaos'), 'chaos');
 });
 test('ordinary chat and command prefixes cannot accidentally contribute', () => {
-  for (const text of ['armor', '!armored', '!legs please', 'hello !chaos', '', '!reset']) assert.equal(parseCommand(text), null);
+  for (const text of ['armor', '!armored', '!legs please', 'hello !chaos', '', '!reset'])
+    assert.equal(parseCommand(text), null);
 });
